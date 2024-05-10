@@ -8,9 +8,9 @@ namespace Kodblue.Autocomplete.Address.Fields
         public AutocompleteAddress()
         {
             Id = new Guid("f3b3b3b3-3b3b-3b3b-3b3b-3b3b3b2b3b3b");
-            Name = "Address Autocomplete";
-            Description = "Address Autocomplete";
-            Icon = "icon-location";
+            Name = "Autocomplete Address";
+            Description = "Autocomplete and autofill address";
+            Icon = "icon-map-location";
             DataType = FieldDataType.String;
             SortOrder = 10;
             SupportsPreValues = false;

@@ -1,0 +1,6 @@
+.vs
+*.sln
+# Test project
+*.Web
+*/bin
+*/obj

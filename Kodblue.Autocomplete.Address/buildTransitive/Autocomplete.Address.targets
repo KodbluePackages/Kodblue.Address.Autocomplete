@@ -1,0 +1,25 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	  <KodblueAutocompleteAddressContentFilesPath>$(MSBuildThisFileDirectory)..\App_Plugins\Kodblue.Autocomplete.Address\**\*.*</KodblueAutocompleteAddressContentFilesPath>
+	  <KodblueAutocompleteAddressFieldTypesPath>$(MSBuildThisFileDirectory)..\App_Plugins\Kodblue.Autocomplete.Address\FieldTypes\*.*</KodblueAutocompleteAddressFieldTypesPath>
+  </PropertyGroup>
+
+  <Target Name="CopyAutocompleteAddressAssets" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+		<KodblueAutocompleteAddressContentFiles Include="$(KodblueAutocompleteAddressContentFilesPath)" />
+		<KodblueAutocompleteAddressFieldTypesFiles Include="$(KodblueAutocompleteAddressFieldTypesPath)" />
+    </ItemGroup>
+    <Message Text="Copying Address.Autocomplete files: $(KodblueAutocompleteAddressContentFilesPath) - #@(KodblueAutocompleteAddressContentFiles->Count()) files" Importance="high" />
+    <Copy SourceFiles="@(KodblueAutocompleteAddressContentFiles)" DestinationFiles="@(KodblueAutocompleteAddressContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\Kodblue.Autocomplete.Address\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+	<Message Text="Copying Address.Autocomplete FieldType files: $(KodblueAutocompleteAddressFieldTypesPath) - #@(KodblueAutocompleteAddressFieldTypesFiles->Count()) files" Importance="high" />
+	<Copy SourceFiles="@(KodblueAutocompleteAddressFieldTypesFiles)" DestinationFiles="@(KodblueAutocompleteAddressFieldTypesFiles->'$(MSBuildProjectDirectory)\Views\Partials\Forms\Themes\Default\Fieldtypes\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="ClearKodblueAutocompleteAddressAssets" BeforeTargets="Clean">
+    <ItemGroup>
+		<KodblueAutocompleteAddressDir Include="$(MSBuildProjectDirectory)\App_Plugins\Kodblue.Autocomplete.Address\" />
+    </ItemGroup>
+    <Message Text="Clear old Kodblue.Autocomplete.Address data" Importance="high" />
+    <RemoveDir Directories="@(KodblueAutocompleteAddressDir)" />
+  </Target>
+</Project>

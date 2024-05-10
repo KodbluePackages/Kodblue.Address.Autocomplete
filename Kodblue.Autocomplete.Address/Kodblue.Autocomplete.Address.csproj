@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ContentTargetFolders>.</ContentTargetFolders>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Kodblue.Autocomplete.Address</PackageId>
+    <Product>Address.Autocomplete</Product>
+    <Title>Kodblue.Autocomplete.Address</Title>
+    <Description>An Umbraco Forms Fieldtype that seamlessly integrates Google Places API, providing intelligent autocomplete and autofill for address fields</Description>
+    <PackageTags>umbraco umbracoForms forms umbraco-marketplace</PackageTags>
+    <Version>1.0.0-beta.1</Version>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Umbraco.Cms.Core" Version="13.3.0" />
+    <PackageReference Include="Umbraco.Forms.Core" Version="13.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App_Plugins\Kodblue.Autocomplete.Address\**" ExcludeFromSingleFile="true" CopyToPublishDirectory="Always" />
+    <None Include="buildTransitive\**" Pack="true" PackagePath="buildTransitive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="app_plugins\kodblue.autocomplete.address\backoffice\fieldtypes\AutocompleteAddress.html" />
+    <None Remove="App_Plugins\Kodblue.Autocomplete.Address\FieldTypes\FieldType.AutocompleteAddress.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="App_Plugins\Kodblue.Autocomplete.Address\Backoffice\FieldTypes\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="App_Plugins\Kodblue.Autocomplete.Address\FieldTypes\FieldType.AutocompleteAddress.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

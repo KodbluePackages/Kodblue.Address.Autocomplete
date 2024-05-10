@@ -1,0 +1,115 @@
+@using Umbraco.Forms.Web
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model Umbraco.Forms.Web.Models.FieldViewModel
+@{
+    var googlePlacesApiKey = @Configuration["KodblueAutocompleteAddress:GooglePlacesApiKey"];
+}
+@if(googlePlacesApiKey != null)
+{
+    <script>
+        (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+            ({ key: "@googlePlacesApiKey", v: "beta" });
+    </script>
+}
+
+<div id="autocomplete-address-wrapper" style="max-width:400px;">
+
+</div>
+
+<script>
+
+    async function initMap() {
+        // Request needed libraries.
+        const [{ Map }] = await Promise.all([google.maps.importLibrary("places")]);
+
+        // create gmp-place-autocomplete element and append it to the body
+        const placeAutocomplete = document.createElement("gmp-place-autocomplete");
+        document.getElementById("autocomplete-address-wrapper").appendChild(placeAutocomplete);
+
+
+        // Inject HTML UI.
+        const selectedPlaceTitle = document.createElement("p");
+
+        selectedPlaceTitle.textContent = "";
+        document.body.appendChild(selectedPlaceTitle);
+
+        const selectedPlaceInfo = document.createElement("pre");
+
+        selectedPlaceInfo.textContent = "";
+        document.body.appendChild(selectedPlaceInfo);
+
+        // Add the gmp-placeselect listener, and display the results.
+        placeAutocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
+            await place.fetchFields({
+                fields: ["displayName", "formattedAddress", "location", "addressComponents"],
+            });
+            selectedPlaceTitle.textContent = "Selected Place:";
+            selectedPlaceInfo.textContent = JSON.stringify(
+                place.toJSON(),
+                  /* replacer */ null,
+                  /* space */ 2,
+            ); 
+            
+            var jsonPlace = place.toJSON();
+            var houseNumber = jsonPlace.addressComponents.find((x) => x.types.includes("street_number"));
+            var street = jsonPlace.addressComponents.find((x) => x.types.includes("route"));
+            var apartment = jsonPlace.addressComponents.find((x) => x.types.includes("subpremise"));
+            var subLocality = jsonPlace.addressComponents.find((x) => x.types.includes("sublocality"));
+            var city = jsonPlace.addressComponents.find((x) => x.types.includes("locality"));
+            var zipCode = jsonPlace.addressComponents.find((x) => x.types.includes("postal_code"));
+            var state = jsonPlace.addressComponents.find((x) => x.types.includes("administrative_area_level_1"));
+            var country = jsonPlace.addressComponents.find((x) => x.types.includes("country"));
+            
+            if (houseNumber) {
+                var houseNumberInput = document.getElementsByClassName("housenumber")[0].getElementsByTagName("input")[0];
+                if(houseNumberInput)
+                    houseNumberInput.value = houseNumber?.longText;
+            }
+
+            if (street) {
+                document.getElementById("@Model.Id").value = street?.longText;
+            }
+
+            if (apartment) {
+                var apartmentInput = document.getElementsByClassName("apartment")[0].getElementsByTagName("input")[0];
+                if (apartmentInput)
+                    apartmentInput.value = apartment?.longText;
+            }
+
+            if(subLocality) {
+                var subLocalityInput = document.getElementsByClassName("sublocality")[0].getElementsByTagName("input")[0];
+                if (subLocalityInput)
+                    subLocalityInput.value = subLocality?.longText;
+            }
+
+            if(city) {
+                var cityInput = document.getElementsByClassName("city")[0].getElementsByTagName("input")[0];
+                if (cityInput)
+                    cityInput.value = city?.longText;
+            }
+
+            if(zipCode) {
+                var zipCodeInput = document.getElementsByClassName("zipcode")[0].getElementsByTagName("input")[0];
+                if (zipCodeInput)
+                    zipCodeInput.value = zipCode?.longText;
+            }
+
+            if(state) {
+                var stateInput = document.getElementsByClassName("state")[0].getElementsByTagName("input")[0];
+                if (stateInput)
+                    stateInput.value = state?.longText;
+            }
+
+            if(country) {
+                var countryInput = document.getElementsByClassName("country")[0].getElementsByTagName("input")[0];
+                if (countryInput)
+                    countryInput.value = country?.longText;
+            }
+        });
+    }
+
+    initMap();
+</script>
+
+<input type="hidden" name="@Model.Name" id="@Model.Id" data-umb="@Model.Id" class="hidden" value="@Model.ValueAsHtmlString" />

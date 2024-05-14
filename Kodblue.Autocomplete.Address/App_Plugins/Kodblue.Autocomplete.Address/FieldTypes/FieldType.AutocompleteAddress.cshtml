@@ -27,29 +27,11 @@
         const placeAutocomplete = document.createElement("gmp-place-autocomplete");
         document.getElementById("autocomplete-address-wrapper").appendChild(placeAutocomplete);
 
-
-        // Inject HTML UI.
-        const selectedPlaceTitle = document.createElement("p");
-
-        selectedPlaceTitle.textContent = "";
-        document.body.appendChild(selectedPlaceTitle);
-
-        const selectedPlaceInfo = document.createElement("pre");
-
-        selectedPlaceInfo.textContent = "";
-        document.body.appendChild(selectedPlaceInfo);
-
         // Add the gmp-placeselect listener, and display the results.
         placeAutocomplete.addEventListener("gmp-placeselect", async ({ place }) => {
             await place.fetchFields({
-                fields: ["displayName", "formattedAddress", "location", "addressComponents"],
+                fields: ["addressComponents"],
             });
-            selectedPlaceTitle.textContent = "Selected Place:";
-            selectedPlaceInfo.textContent = JSON.stringify(
-                place.toJSON(),
-                  /* replacer */ null,
-                  /* space */ 2,
-            ); 
             
             var jsonPlace = place.toJSON();
             var houseNumber = jsonPlace.addressComponents.find((x) => x.types.includes("street_number"));

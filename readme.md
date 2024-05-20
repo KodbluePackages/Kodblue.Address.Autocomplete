@@ -36,3 +36,9 @@ The package checks if there is a API key in the appsettings.json file, if there 
 If there is no key, the package will not add the script to the html. 
 
 So if you would like to add the Google Places script to the head section of the website, you can do this manually.
+
+## Screenshots
+
+![Front-end](https://i.imgur.com/lpKNz9s.gif)
+
+![Back-end](https://i.imgur.com/x8cAJJg.png)
